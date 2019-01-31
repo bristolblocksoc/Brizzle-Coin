@@ -1,5 +1,6 @@
 import ecdsa
-import flask
+from flask import Flask, request
+from flask.json import jsonify
 from hashlib import sha256
 import time
 
@@ -65,15 +66,31 @@ def get_longest_chain(old_blockchain, new_blockchain):
 
     return old_blockchain
 
-genesis_block = Block(0, '816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7', None, "the genesis block")
+def previous_block(blockchain):
+    return blockchain[-1]
+
+genesis_block = Block(0, '816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7', None, 'the genesis block')
 
 if __name__ == '__main__':
-    next_block = generate_next_block("wow", genesis_block)
+    next_block = generate_next_block('wow', genesis_block)
 
-    blockchain = [genesis_block]
     blockchain = get_longest_chain(blockchain, [genesis_block, next_block])
 
     print(genesis_block);
     print(next_block);
 
     print(blockchain)
+
+app = Flask(__name__)
+blockchain = [genesis_block]
+
+@app.route('/blocks')
+def block():
+    return jsonify([block.__dict__ for block in blockchain])
+
+@app.route('/mineBlock', methods = ['POST'])
+def mine_block():
+    block_data = request.args['data']
+    new_block = generate_next_block(block_data, previous_block(blockchain))
+
+    return new_block
