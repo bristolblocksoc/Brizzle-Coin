@@ -2,7 +2,6 @@ import ecdsa
 import flask
 from datetime import time
 from hashlib import sha256
-import bitarray
 
 import utils
 
@@ -21,8 +20,6 @@ class Block():
         Calculate the hash.
         '''
         m = sha256()
-
-        b = bitarray.bitarray()
 
         m.update(str(self.index).encode("utf-8"))
         m.update(self.previousHash.encode("utf-8"))
