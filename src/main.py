@@ -23,10 +23,11 @@ class Block():
         m = sha256()
 
         b = bitarray.bitarray()
-        m.update(utils.strbin(str(self.index)))
-        m.update(utils.strbin(self.previousHash))
-        m.update(utils.strbin(str(self.timestamp)))
-        m.update(utils.strbin(self.data))
+
+        m.update(str(self.index).encode("utf-8"))
+        m.update(self.previousHash.encode("utf-8"))
+        m.update(str(self.timestamp).encode("utf-8"))
+        m.update(self.data.encode("utf-8"))
 
         return m.hexdigest()
 
