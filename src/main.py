@@ -90,7 +90,8 @@ def block():
 
 @app.route('/mineBlock', methods = ['POST'])
 def mine_block():
-    block_data = request.args['data']
+    block_data = request.get_data().decode("utf-8")
+    print(block_data)
     new_block = generate_next_block(block_data, previous_block(blockchain))
 
     return new_block
